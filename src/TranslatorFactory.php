@@ -7,9 +7,9 @@ namespace Laminas\Mvc\I18n;
 use Laminas\I18n\Translator\Translator as I18nTranslator;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Mvc\I18n\Translator as MvcTranslator;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Laminas\ServiceManager\ServiceManager;
+use Override;
 use Psr\Container\ContainerInterface;
 use Traversable;
 
@@ -25,9 +25,9 @@ class TranslatorFactory implements FactoryInterface
 {
     /**
      * @param  string $requestedName
-     * @return MvcTranslator
      */
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
+    #[Override]
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): MvcTranslator
     {
         // Assume that if a user has registered a service for the
         // TranslatorInterface, it must be valid
@@ -36,18 +36,6 @@ class TranslatorFactory implements FactoryInterface
         }
 
         return $this->marshalTranslator($container);
-    }
-
-    /**
-     * Create and return MvcTranslator instance
-     *
-     * For use with laminas-servicemanager v2; proxies to __invoke().
-     *
-     * @return MvcTranslator
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this($serviceLocator, MvcTranslator::class);
     }
 
     /**
@@ -61,14 +49,12 @@ class TranslatorFactory implements FactoryInterface
      * - returns an MvcTranslator decorating a DummyTranslator instance if
      *   ext/intl is not loaded.
      * - returns an MvcTranslator decorating an empty I18nTranslator instance.
-     *
-     * @return MvcTranslator
      */
-    private function marshalTranslator(ContainerInterface $container)
+    private function marshalTranslator(ContainerInterface $container): MvcTranslator
     {
         // Load a translator from configuration, if possible
         $translator = $this->marshalTranslatorFromConfig($container);
-        if ($translator) {
+        if ($translator !== null) {
             return $translator;
         }
 
@@ -90,19 +76,17 @@ class TranslatorFactory implements FactoryInterface
      *   configuration is available, and is a non-empty array or a Traversable
      *   instance.
      * - null in all other cases, including absence of a configuration service.
-     *
-     * @return void|MvcTranslator
      */
-    private function marshalTranslatorFromConfig(ContainerInterface $container)
+    private function marshalTranslatorFromConfig(ContainerInterface $container): ?MvcTranslator
     {
         if (! $container->has('config')) {
-            return;
+            return null;
         }
 
         $config = $container->get('config');
 
         if (! array_key_exists('translator', $config)) {
-            return;
+            return null;
         }
 
         // 'translator' => false
@@ -112,12 +96,12 @@ class TranslatorFactory implements FactoryInterface
 
         // Empty translator configuration
         if (is_array($config['translator']) && empty($config['translator'])) {
-            return;
+            return null;
         }
 
         // Unusable translator configuration
         if (! is_array($config['translator']) && ! $config['translator'] instanceof Traversable) {
-            return;
+            return null;
         }
 
         // Create translator from configuration

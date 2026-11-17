@@ -11,9 +11,9 @@ class ConfigProvider
     /**
      * Provide dependency configuration for an application integrating i18n.
      *
-     * @return array
+     * @return array<string, mixed>
      */
-    public function __invoke()
+    public function __invoke(): array
     {
         return [
             'dependencies' => $this->getDependencyConfig(),
@@ -23,16 +23,13 @@ class ConfigProvider
     /**
      * Provide dependency configuration for an application integrating i18n.
      *
-     * @return array
+     * @return array<string, array<string, mixed>>
      */
-    public function getDependencyConfig()
+    public function getDependencyConfig(): array
     {
         return [
             'aliases'    => [
                 'MvcTranslator' => Translator::class,
-
-                // Legacy Zend Framework aliases
-                'Zend\Mvc\I18n\Translator' => Translator::class,
             ],
             'delegators' => [
                 'HttpRouter'          => [Router\HttpRouterDelegatorFactory::class],

@@ -12,10 +12,6 @@
     <DeprecatedInterface>
       <code><![CDATA[DummyTranslator]]></code>
     </DeprecatedInterface>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function translate($message, $textDomain = 'default', $locale = null)]]></code>
-      <code><![CDATA[public function translatePlural($singular, $plural, $number, $textDomain = 'default', $locale = null)]]></code>
-    </MissingOverrideAttribute>
   </file>
   <file src="src/Exception/BadMethodCallException.php">
     <ClassMustBeFinal>
@@ -34,13 +30,6 @@
     <ClassMustBeFinal>
       <code><![CDATA[HttpRouterDelegatorFactory]]></code>
     </ClassMustBeFinal>
-    <DeprecatedInterface>
-      <code><![CDATA[HttpRouterDelegatorFactory]]></code>
-    </DeprecatedInterface>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function __invoke(ContainerInterface $container, $name, callable $callback, ?array $options = null)]]></code>
-      <code><![CDATA[public function createDelegatorWithName(ServiceLocatorInterface $container, $name, $requestedName, $callback)]]></code>
-    </MissingOverrideAttribute>
     <MixedArgument>
       <code><![CDATA[$container->get('MvcTranslator')]]></code>
       <code><![CDATA[$container->get(TranslatorInterface::class)]]></code>
@@ -48,9 +37,6 @@
     <MixedReturnStatement>
       <code><![CDATA[$router]]></code>
     </MixedReturnStatement>
-    <ParamNameMismatch>
-      <code><![CDATA[$container]]></code>
-    </ParamNameMismatch>
   </file>
   <file src="src/Router/TranslatorAwareTreeRouteStack.php">
     <ClassMustBeFinal>
@@ -58,38 +44,17 @@
     </ClassMustBeFinal>
     <DeprecatedInterface>
       <code><![CDATA[?Translator]]></code>
-      <code><![CDATA[Translator]]></code>
-      <code><![CDATA[Translator]]></code>
+      <code><![CDATA[?Translator]]></code>
+      <code><![CDATA[?Translator]]></code>
       <code><![CDATA[TranslatorAwareTreeRouteStack]]></code>
     </DeprecatedInterface>
-    <LessSpecificImplementedReturnType>
-      <code><![CDATA[TreeRouteStack]]></code>
-      <code><![CDATA[TreeRouteStack]]></code>
-      <code><![CDATA[self]]></code>
-    </LessSpecificImplementedReturnType>
     <LessSpecificReturnStatement>
       <code><![CDATA[$instance]]></code>
     </LessSpecificReturnStatement>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function assemble(array $params = [], array $options = [])]]></code>
-      <code><![CDATA[public function getTranslator()]]></code>
-      <code><![CDATA[public function getTranslatorTextDomain()]]></code>
-      <code><![CDATA[public function hasTranslator()]]></code>
-      <code><![CDATA[public function isTranslatorEnabled()]]></code>
-      <code><![CDATA[public function match(Request $request, $pathOffset = null, array $options = [])]]></code>
-      <code><![CDATA[public function setTranslator(?Translator $translator = null, $textDomain = null)]]></code>
-      <code><![CDATA[public function setTranslatorEnabled($enabled = true)]]></code>
-      <code><![CDATA[public function setTranslatorTextDomain($textDomain = 'default')]]></code>
-      <code><![CDATA[public static function factory($options = [])]]></code>
-    </MissingOverrideAttribute>
     <MoreSpecificReturnType>
-      <code><![CDATA[self]]></code>
+      <code><![CDATA[static]]></code>
     </MoreSpecificReturnType>
-    <PossiblyNullPropertyAssignmentValue>
-      <code><![CDATA[$translator]]></code>
-    </PossiblyNullPropertyAssignmentValue>
     <PropertyNotSetInConstructor>
-      <code><![CDATA[$translator]]></code>
       <code><![CDATA[TranslatorAwareTreeRouteStack]]></code>
       <code><![CDATA[TranslatorAwareTreeRouteStack]]></code>
     </PropertyNotSetInConstructor>
@@ -97,9 +62,6 @@
       <code><![CDATA[(bool) $enabled]]></code>
       <code><![CDATA[(string) $textDomain]]></code>
     </RedundantCastGivenDocblockType>
-    <RedundantConditionGivenDocblockType>
-      <code><![CDATA[$this->translator !== null]]></code>
-    </RedundantConditionGivenDocblockType>
     <UndefinedInterfaceMethod>
       <code><![CDATA[setTranslatorTextDomain]]></code>
     </UndefinedInterfaceMethod>
@@ -114,10 +76,6 @@
       <code><![CDATA[Translator]]></code>
       <code><![CDATA[protected]]></code>
     </DeprecatedInterface>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function translate($message, $textDomain = 'default', $locale = null)]]></code>
-      <code><![CDATA[public function translatePlural($singular, $plural, $number, $textDomain = 'default', $locale = null)]]></code>
-    </MissingOverrideAttribute>
     <PossiblyUnusedReturnValue>
       <code><![CDATA[mixed]]></code>
     </PossiblyUnusedReturnValue>
@@ -126,13 +84,6 @@
     <ClassMustBeFinal>
       <code><![CDATA[TranslatorFactory]]></code>
     </ClassMustBeFinal>
-    <DeprecatedInterface>
-      <code><![CDATA[TranslatorFactory]]></code>
-    </DeprecatedInterface>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)]]></code>
-      <code><![CDATA[public function createService(ServiceLocatorInterface $serviceLocator)]]></code>
-    </MissingOverrideAttribute>
     <MixedArgument>
       <code><![CDATA[$config]]></code>
       <code><![CDATA[$container->get('TranslatorPluginManager')]]></code>
