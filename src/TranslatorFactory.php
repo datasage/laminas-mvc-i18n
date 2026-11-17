@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace Laminas\Mvc\I18n;
 
-// phpcs:disable WebimpressCodingStandard.PHP.CorrectClassNameCase
-
-use Interop\Container\ContainerInterface;
 use Laminas\I18n\Translator\Translator as I18nTranslator;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Mvc\I18n\Translator as MvcTranslator;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\ServiceManager\ServiceManager;
+use Psr\Container\ContainerInterface;
 use Traversable;
 
 use function array_key_exists;

@@ -75,7 +75,6 @@ class TranslatorAwareTreeRouteStack extends TreeRouteStack implements Translator
      * @see    RouteInterface::match()
      *
      * @param  integer|null $pathOffset
-     * @param  array        $options
      * @return RouteMatch|null
      */
     public function match(Request $request, $pathOffset = null, array $options = [])
@@ -96,8 +95,6 @@ class TranslatorAwareTreeRouteStack extends TreeRouteStack implements Translator
      *
      * @see    RouteInterface::assemble()
      *
-     * @param  array $params
-     * @param  array $options
      * @return mixed
      * @throws Exception\InvalidArgumentException
      * @throws Exception\RuntimeException

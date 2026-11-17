@@ -18,7 +18,6 @@ class TranslatorAwareTreeRouteStackTest extends TestCase
 
     private Translator $translator;
 
-    /** @var array */
     private array $fooRoute;
 
     public function setUp(): void
