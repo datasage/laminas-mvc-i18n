@@ -6,8 +6,8 @@ namespace Laminas\Mvc\I18n\Router;
 
 use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Router\RouteStackInterface;
-use Laminas\ServiceManager\DelegatorFactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\DelegatorFactoryInterface;
+use Override;
 use Psr\Container\ContainerInterface;
 
 class HttpRouterDelegatorFactory implements DelegatorFactoryInterface
@@ -27,6 +27,7 @@ class HttpRouterDelegatorFactory implements DelegatorFactoryInterface
      * @param null|array $options
      * @return RouteStackInterface|TranslatorAwareTreeRouteStack
      */
+    #[Override]
     public function __invoke(ContainerInterface $container, $name, callable $callback, ?array $options = null)
     {
         $router = $callback();
@@ -48,18 +49,5 @@ class HttpRouterDelegatorFactory implements DelegatorFactoryInterface
         $router->setTranslatorEnabled(false);
 
         return $router;
-    }
-
-    /**
-     * laminas-servicemanager v2 compabibility
-     *
-     * @param string $name
-     * @param string $requestedName
-     * @param callable $callback
-     * @return RouteStackInterface|TranslatorAwareTreeRouteStack
-     */
-    public function createDelegatorWithName(ServiceLocatorInterface $container, $name, $requestedName, $callback)
-    {
-        return $this($container, $requestedName, $callback);
     }
 }

@@ -6,8 +6,8 @@ namespace Laminas\Mvc\I18n;
 
 use Laminas\I18n\Translator\TranslatorInterface as I18nTranslatorInterface;
 use Laminas\Validator\Translator\TranslatorInterface as ValidatorTranslatorInterface;
+use Override;
 
-use function call_user_func_array;
 use function method_exists;
 use function sprintf;
 
@@ -38,13 +38,10 @@ class Translator implements
                 $method
             ));
         }
-        return call_user_func_array([$this->translator, $method], $args);
+        return $this->translator->$method(...$args);
     }
 
-    /**
-     * @return I18nTranslatorInterface
-     */
-    public function getTranslator()
+    public function getTranslator(): I18nTranslatorInterface
     {
         return $this->translator;
     }
@@ -57,6 +54,7 @@ class Translator implements
      * @param string $locale
      * @return string
      */
+    #[Override]
     public function translate($message, $textDomain = 'default', $locale = null)
     {
         return $this->translator->translate($message, $textDomain, $locale);
@@ -72,6 +70,7 @@ class Translator implements
      * @param string $locale
      * @return string
      */
+    #[Override]
     public function translatePlural($singular, $plural, $number, $textDomain = 'default', $locale = null)
     {
         return $this->translator->translatePlural($singular, $plural, $number, $textDomain, $locale);

@@ -9,9 +9,9 @@ class Module
     /**
      * Provide configuration for an application integrating i18n.
      *
-     * @return array
+     * @return array<string, mixed>
      */
-    public function getConfig()
+    public function getConfig(): array
     {
         $provider = new ConfigProvider();
         return [

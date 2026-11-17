@@ -5,16 +5,19 @@ declare(strict_types=1);
 namespace Laminas\Mvc\I18n;
 
 use Laminas\I18n\Translator\TranslatorInterface as I18nTranslatorInterface;
+use Override;
 
 class DummyTranslator implements I18nTranslatorInterface
 {
     /** @inheritDoc */
+    #[Override]
     public function translate($message, $textDomain = 'default', $locale = null)
     {
         return $message;
     }
 
     /** @inheritDoc */
+    #[Override]
     public function translatePlural($singular, $plural, $number, $textDomain = 'default', $locale = null)
     {
         // phpcs:disable SlevomatCodingStandard.Operators.DisallowEqualOperators
