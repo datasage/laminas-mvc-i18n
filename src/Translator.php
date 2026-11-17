@@ -28,7 +28,6 @@ class Translator implements
      * @deprecated
      *
      * @param string $method
-     * @param array $args
      * @return mixed
      */
     public function __call($method, array $args)

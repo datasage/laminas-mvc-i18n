@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace LaminasTest\Mvc\I18n;
 
-// phpcs:disable WebimpressCodingStandard.PHP.CorrectClassNameCase
-
 use ArrayAccess;
 use ArrayObject;
-use Interop\Container\ContainerInterface;
 use Laminas\I18n\Translator\LoaderPluginManager;
 use Laminas\I18n\Translator\Translator as I18nTranslator;
 use Laminas\I18n\Translator\TranslatorInterface;
@@ -17,79 +14,59 @@ use Laminas\Mvc\I18n\Translator as MvcTranslator;
 use Laminas\Mvc\I18n\TranslatorFactory;
 use Laminas\ServiceManager\ServiceManager;
 use Locale;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 
 use function extension_loaded;
 
 class TranslatorFactoryTest extends TestCase
 {
-    use ProphecyTrait;
-
-    /** @var ObjectProphecy */
-    protected $container;
-
-    public function setUp(): void
+    /** @param array<string, mixed> $services */
+    private static function container(array $services = []): ServiceManager
     {
-        $this->container = $this->prophesize(ServiceManager::class);
-        $this->container->willImplement(ContainerInterface::class);
+        return new ServiceManager(['services' => $services]);
     }
 
     public function testFactoryReturnsMvcTranslatorDecoratingTranslatorInterfaceServiceWhenPresent(): void
     {
-        $translator = $this->prophesize(TranslatorInterface::class)->reveal();
-        $this->container->has(TranslatorInterface::class)->willReturn(true);
-        $this->container->get(TranslatorInterface::class)->willReturn($translator);
+        $translator = $this->createStub(TranslatorInterface::class);
+        $container  = self::container([TranslatorInterface::class => $translator]);
 
         $factory = new TranslatorFactory();
-        $test    = $factory($this->container->reveal(), TranslatorInterface::class);
+        $test    = $factory($container, TranslatorInterface::class);
 
         $this->assertInstanceOf(MvcTranslator::class, $test);
         $this->assertSame($translator, $test->getTranslator());
     }
 
     /** @return array<string, array{0: class-string}> */
-    public function expectedTranslatorProvider(): array
+    public static function expectedTranslatorProvider(): array
     {
         return extension_loaded('intl')
             ? ['intl-loaded' => [I18nTranslator::class]]
             : ['no-intl-loaded' => [DummyTranslator::class]];
     }
 
-    /**
-     * @dataProvider expectedTranslatorProvider
-     * @param class-string $expected
-     */
+    /** @param class-string $expected */
+    #[DataProvider('expectedTranslatorProvider')]
     public function testFactoryReturnsMvcTranslatorDecoratingDefaultTranslatorWhenNoConfigPresent(
         string $expected
     ): void {
-        $this->container->has(TranslatorInterface::class)->willReturn(false);
-        $this->container->has('Zend\I18n\Translator\TranslatorInterface')->willReturn(false);
-        $this->container->has('config')->willReturn(false);
-
         $factory = new TranslatorFactory();
-        $test    = $factory($this->container->reveal(), TranslatorInterface::class);
+        $test    = $factory(self::container(), TranslatorInterface::class);
 
         $this->assertInstanceOf(MvcTranslator::class, $test);
         $this->assertInstanceOf($expected, $test->getTranslator());
     }
 
-    /**
-     * @dataProvider expectedTranslatorProvider
-     * @param class-string $expected
-     */
+    /** @param class-string $expected */
+    #[DataProvider('expectedTranslatorProvider')]
     public function testFactoryReturnsMvcDecoratorDecoratingDefaultTranslatorWhenNoTranslatorConfigPresent(
         string $expected
     ): void {
-        $this->container->has(TranslatorInterface::class)->willReturn(false);
-        $this->container->has('Zend\I18n\Translator\TranslatorInterface')->willReturn(false);
-        $this->container->has('config')->willReturn(true);
-        $this->container->get('config')->willReturn([]);
-
         $factory = new TranslatorFactory();
-        $test    = $factory($this->container->reveal(), TranslatorInterface::class);
+        $test    = $factory(self::container(['config' => []]), TranslatorInterface::class);
 
         $this->assertInstanceOf(MvcTranslator::class, $test);
         $this->assertInstanceOf($expected, $test->getTranslator());
@@ -97,39 +74,27 @@ class TranslatorFactoryTest extends TestCase
 
     public function testFactoryReturnsMvcDecoratorDecoratingDummyTranslatorWhenTranslatorConfigIsFalse(): void
     {
-        $this->container->has(TranslatorInterface::class)->willReturn(false);
-        $this->container->has('Zend\I18n\Translator\TranslatorInterface')->willReturn(false);
-        $this->container->has('config')->willReturn(true);
-        $this->container->get('config')->willReturn(['translator' => false]);
-
         $factory = new TranslatorFactory();
-        $test    = $factory($this->container->reveal(), TranslatorInterface::class);
+        $test    = $factory(self::container(['config' => ['translator' => false]]), TranslatorInterface::class);
 
         $this->assertInstanceOf(MvcTranslator::class, $test);
         $this->assertInstanceOf(DummyTranslator::class, $test->getTranslator());
     }
 
-    /**
-     * @param class-string $expected
-     * @dataProvider expectedTranslatorProvider
-     */
+    /** @param class-string $expected */
+    #[DataProvider('expectedTranslatorProvider')]
     public function testFactoryReturnsMvcDecoratorDecoratingDefaultTranslatorWhenEmptyTranslatorConfigPresent(
         string $expected
     ): void {
-        $this->container->has(TranslatorInterface::class)->willReturn(false);
-        $this->container->has('Zend\I18n\Translator\TranslatorInterface')->willReturn(false);
-        $this->container->has('config')->willReturn(true);
-        $this->container->get('config')->willReturn(['translator' => []]);
-
         $factory = new TranslatorFactory();
-        $test    = $factory($this->container->reveal(), TranslatorInterface::class);
+        $test    = $factory(self::container(['config' => ['translator' => []]]), TranslatorInterface::class);
 
         $this->assertInstanceOf(MvcTranslator::class, $test);
         $this->assertInstanceOf($expected, $test->getTranslator());
     }
 
     /** @return array<string, array{0: array<string, mixed>, 1: class-string}> */
-    public function invalidTranslatorConfig(): array
+    public static function invalidTranslatorConfig(): array
     {
         $expectedTranslator = extension_loaded('intl')
             ? I18nTranslator::class
@@ -150,19 +115,14 @@ class TranslatorFactoryTest extends TestCase
     /**
      * @param array<string, mixed> $config
      * @param class-string $expected
-     * @dataProvider invalidTranslatorConfig
      */
+    #[DataProvider('invalidTranslatorConfig')]
     public function testFactoryReturnsMvcDecoratorDecoratingDefaultTranslatorWithInvalidTranslatorConfig(
-        $config,
-        $expected
+        array $config,
+        string $expected
     ): void {
-        $this->container->has(TranslatorInterface::class)->willReturn(false);
-        $this->container->has('Zend\I18n\Translator\TranslatorInterface')->willReturn(false);
-        $this->container->has('config')->willReturn(true);
-        $this->container->get('config')->willReturn($config);
-
         $factory = new TranslatorFactory();
-        $test    = $factory($this->container->reveal(), TranslatorInterface::class);
+        $test    = $factory(self::container(['config' => $config]), TranslatorInterface::class);
 
         $this->assertInstanceOf(MvcTranslator::class, $test);
         $this->assertInstanceOf($expected, $test->getTranslator());
@@ -171,7 +131,7 @@ class TranslatorFactoryTest extends TestCase
     /**
      * @psalm-return array<non-empty-string,array{0:array<string,mixed>|ArrayAccess<string,mixed>}>
      */
-    public function validTranslatorConfig(): array
+    public static function validTranslatorConfig(): array
     {
         $locale = Locale::getDefault() === 'en-US' ? 'de-DE' : Locale::getDefault();
         $config = [
@@ -185,66 +145,46 @@ class TranslatorFactoryTest extends TestCase
         ];
     }
 
-    /**
-     * @requires extension intl
-     * @dataProvider validTranslatorConfig
-     * @param array<string,mixed>|ArrayAccess<string,mixed> $config
-     */
-    public function testFactoryReturnsConfiguredTranslatorWhenValidConfigIsPresent($config): void
-    {
-        $this->container->has(TranslatorInterface::class)->willReturn(false);
-        $this->container->has('Zend\I18n\Translator\TranslatorInterface')->willReturn(false);
-        $this->container->has('config')->willReturn(true);
-        $this->container->get('config')->willReturn(['translator' => $config]);
-        $this->container->has('TranslatorPluginManager')->willReturn(false);
-
-        $this->container->setService(
-            TranslatorInterface::class,
-            Argument::type(I18nTranslator::class)
-        )->shouldBeCalled();
+    /** @param array<string,mixed>|ArrayAccess<string,mixed> $config */
+    #[RequiresPhpExtension('intl')]
+    #[DataProvider('validTranslatorConfig')]
+    public function testFactoryReturnsConfiguredTranslatorWhenValidConfigIsPresent(
+        array|ArrayAccess $config
+    ): void {
+        $container = self::container(['config' => ['translator' => $config]]);
 
         $factory = new TranslatorFactory();
-        $test    = $factory($this->container->reveal(), TranslatorInterface::class);
+        $test    = $factory($container, TranslatorInterface::class);
 
         $this->assertInstanceOf(MvcTranslator::class, $test);
 
         $decorated = $test->getTranslator();
         $this->assertInstanceOf(I18nTranslator::class, $decorated);
-        $locale = $config['locale'] ?? null;
-        self::assertIsString($locale);
-        $this->assertEquals($locale, $decorated->getLocale());
+        $this->assertSame($decorated, $container->get(TranslatorInterface::class));
+        $this->assertEquals($config['locale'], $decorated->getLocale());
         $this->assertTrue($decorated->isEventManagerEnabled());
     }
 
-    /**
-     * @param array<string,mixed>|ArrayAccess<string,mixed> $config
-     * @requires extension intl
-     * @dataProvider validTranslatorConfig
-     */
+    /** @param array<string,mixed>|ArrayAccess<string,mixed> $config */
+    #[RequiresPhpExtension('intl')]
+    #[DataProvider('validTranslatorConfig')]
     public function testFactoryReturnsConfiguredTranslatorInjectedWithTranslatorPluginManagerWhenValidConfigIsPresent(
-        $config
+        array|ArrayAccess $config
     ): void {
-        $this->container->has(TranslatorInterface::class)->willReturn(false);
-        $this->container->has('Zend\I18n\Translator\TranslatorInterface')->willReturn(false);
-        $this->container->has('config')->willReturn(true);
-        $this->container->get('config')->willReturn(['translator' => $config]);
-        $this->container->has('TranslatorPluginManager')->willReturn(true);
-
-        $loaders = $this->prophesize(LoaderPluginManager::class)->reveal();
-        $this->container->get('TranslatorPluginManager')->willReturn($loaders);
-
-        $this->container->setService(
-            TranslatorInterface::class,
-            Argument::type(I18nTranslator::class)
-        )->shouldBeCalled();
+        $loaders   = new LoaderPluginManager(new ServiceManager());
+        $container = self::container([
+            'config'                  => ['translator' => $config],
+            'TranslatorPluginManager' => $loaders,
+        ]);
 
         $factory = new TranslatorFactory();
-        $test    = $factory($this->container->reveal(), TranslatorInterface::class);
+        $test    = $factory($container, TranslatorInterface::class);
 
         $this->assertInstanceOf(MvcTranslator::class, $test);
 
         $decorated = $test->getTranslator();
         $this->assertInstanceOf(I18nTranslator::class, $decorated);
+        $this->assertSame($decorated, $container->get(TranslatorInterface::class));
         $this->assertEquals($config['locale'], $decorated->getLocale());
         $this->assertTrue($decorated->isEventManagerEnabled());
         $this->assertSame($loaders, $decorated->getPluginManager());

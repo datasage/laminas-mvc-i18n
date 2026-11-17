@@ -1,7 +1,10 @@
-/docs/html/
-/laminas-mkdoc-theme.tgz
-/laminas-mkdoc-theme/
+/clover.xml
+/coveralls-upload.json
+/psalm.xml
+/phpcs.xml
+/.psalm-cache/
 /phpunit.xml
 /vendor/
-.phpunit.result.cache
-.phpcs-cache
+/.phpunit.cache/
+/.phpunit.result.cache
+/.phpcs-cache
