@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Laminas\Mvc\I18n\Router;
 
-// phpcs:disable WebimpressCodingStandard.PHP.CorrectClassNameCase
-
-use Interop\Container\ContainerInterface;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Router\RouteStackInterface;
 use Laminas\ServiceManager\DelegatorFactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerInterface;
 
 class HttpRouterDelegatorFactory implements DelegatorFactoryInterface
 {

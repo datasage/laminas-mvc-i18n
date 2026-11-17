@@ -7,43 +7,38 @@ namespace LaminasTest\Mvc\I18n;
 use Laminas\I18n\Translator\Translator as I18nTranslator;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Mvc\I18n\Translator;
-use PHPUnit\Framework\MockObject\MockObject;
+use Laminas\Validator\Translator\TranslatorInterface as ValidatorTranslatorInterface;
 use PHPUnit\Framework\TestCase;
 
 class TranslatorTest extends TestCase
 {
-    /** @var Translator */
-    protected $translator;
-
-    /** @var TranslatorInterface|MockObject */
-    protected $i18nTranslator;
-
-    public function setUp(): void
+    public function testIsAnI18nTranslator(): void
     {
-        $this->i18nTranslator = $this->createMock(I18nTranslator::class);
-        $this->translator     = new Translator($this->i18nTranslator);
+        $translator = new Translator($this->createStub(I18nTranslator::class));
+        $this->assertInstanceOf(TranslatorInterface::class, $translator);
     }
 
-    public function testIsAnI18nTranslator()
+    public function testIsAValidatorTranslator(): void
     {
-        $this->assertInstanceOf(TranslatorInterface::class, $this->translator);
+        $translator = new Translator($this->createStub(I18nTranslator::class));
+        $this->assertInstanceOf(ValidatorTranslatorInterface::class, $translator);
     }
 
-    public function testIsAValidatorTranslator()
+    public function testCanRetrieveComposedTranslator(): void
     {
-        $this->assertInstanceOf(TranslatorInterface::class, $this->translator);
+        $i18nTranslator = $this->createStub(I18nTranslator::class);
+        $translator     = new Translator($i18nTranslator);
+        $this->assertSame($i18nTranslator, $translator->getTranslator());
     }
 
-    public function testCanRetrieveComposedTranslator()
+    public function testCanProxyToComposedTranslatorMethods(): void
     {
-        $this->assertSame($this->i18nTranslator, $this->translator->getTranslator());
-    }
-
-    public function testCanProxyToComposedTranslatorMethods()
-    {
-        $this->i18nTranslator->expects($this->once())
+        $i18nTranslator = $this->createMock(I18nTranslator::class);
+        $i18nTranslator->expects($this->once())
             ->method('setLocale')
             ->with($this->equalTo('en_US'));
-        $this->translator->setLocale('en_US');
+
+        $translator = new Translator($i18nTranslator);
+        $translator->setLocale('en_US');
     }
 }

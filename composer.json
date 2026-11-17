@@ -19,7 +19,7 @@
     "config": {
         "sort-packages": true,
         "platform": {
-            "php": "8.1.99"
+            "php": "8.3.99"
         },
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
@@ -32,25 +32,25 @@
         }
     },
     "require": {
-        "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
-        "ext-intl": "*",
-        "container-interop/container-interop": "^1.1",
-        "laminas/laminas-i18n": "^2.13.0",
-        "laminas/laminas-router": "^3.5.0",
-        "laminas/laminas-servicemanager": "^3.15.1",
-        "laminas/laminas-stdlib": "^3.10.1",
-        "laminas/laminas-validator": "^2.19.0"
+        "php": "~8.3.0 || ~8.4.0 || ~8.5.0 || ~8.6.0",
+        "laminas/laminas-i18n": "^2.31",
+        "laminas/laminas-router": "^3.17",
+        "laminas/laminas-servicemanager": "^3.24",
+        "laminas/laminas-stdlib": "^3.21",
+        "laminas/laminas-validator": "^2.65",
+        "psr/container": "^1.1 || ^2.0"
     },
     "require-dev": {
-        "laminas/laminas-coding-standard": "~2.5.0",
-        "phpspec/prophecy-phpunit": "^2.0.2",
-        "phpunit/phpunit": "^9.6.13",
-        "psalm/plugin-phpunit": "^0.19.0",
-        "vimeo/psalm": "^5.15"
+        "amphp/dns": "^2.4",
+        "amphp/socket": "^2.4",
+        "laminas/laminas-coding-standard": "^3.1",
+        "laminas/laminas-http": "^2.23 || ^3.0",
+        "phpunit/phpunit": "^12.0 || ^13.0",
+        "psalm/plugin-phpunit": "^0.19",
+        "vimeo/psalm": "^6.14"
     },
     "conflict": {
         "laminas/laminas-mvc": "<3.0.0",
-        "phpspec/prophecy": "<1.8.0",
         "zendframework/zend-mvc-i18n": "*"
     },
     "suggest": {
