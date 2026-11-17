@@ -157,7 +157,6 @@
       <code><![CDATA[TranslatorAwareTreeRouteStackTest]]></code>
     </ClassMustBeFinal>
     <DeprecatedInterface>
-      <code><![CDATA[$stack->addRoute('test', $route)]]></code>
       <code><![CDATA[$this->createMock(RouteInterface::class)]]></code>
       <code><![CDATA[$this->createMock(RouteInterface::class)]]></code>
     </DeprecatedInterface>
